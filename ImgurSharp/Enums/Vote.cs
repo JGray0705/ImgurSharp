@@ -1,5 +1,5 @@
 ﻿namespace ImgurSharp.Enums {
     public enum Vote {
-        Up, Down, None
+        None, Up, Down
     }
 }
