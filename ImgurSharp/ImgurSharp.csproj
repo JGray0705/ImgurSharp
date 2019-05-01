@@ -44,9 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Endpoints\CommentEndpoint.cs" />
+    <Compile Include="API\Endpoints\ImageEndpoint.cs" />
     <Compile Include="API\ImgurClient.cs" />
-    <Compile Include="Entities\Image.cs" />
+    <Compile Include="API\ImgurHttp.cs" />
+    <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\Album.cs" />
+    <Compile Include="Models\Basic.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Gallery.cs" />
+    <Compile Include="Models\Image.cs" />
     <Compile Include="Enums\Vote.cs" />
+    <Compile Include="Models\Tag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

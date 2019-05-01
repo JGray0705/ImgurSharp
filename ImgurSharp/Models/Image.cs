@@ -1,39 +1,61 @@
 ﻿using ImgurSharp.Enums;
-using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ImgurSharp.Entities {
+namespace ImgurSharp.Models {
 
     public class Image {
+        [JsonProperty("id")]
         public string Id { get; }
+        [JsonProperty("title")]
         public string Title { get; }
+        [JsonProperty("description")]
         public string Description { get; }
-        public string DateTime { get; }
+        [JsonProperty("datetime")]
+        public int DateTime { get; }
+        [JsonProperty("type")]
         public string Type { get; }
+        [JsonProperty("animated")]
         public bool Animated { get; }
+        [JsonProperty("height")]
         public int Height { get; }
+        [JsonProperty("width")]
         public int Width { get; }
+        [JsonProperty("size")]
+        public int Size { get; }
+        [JsonProperty("views")]
         public int Views { get; }
-        public int Bandwidth { get; }
+        [JsonProperty("bandwidth")]
+        public string Bandwidth { get; }
+        [JsonProperty("vote")]
         public Vote? Vote { get; }
+        [JsonProperty("favorite")]
         public bool Favorite { get; }
-        public bool NSFW { get; }
+        [JsonProperty("nsfw")]
+        public bool Nsfw { get; }
+        [JsonProperty("section")]
         public string Section { get; }
+        [JsonProperty("account_url")]
         public string AccountUrl { get; }
-        public int AccountId { get; }
+        [JsonProperty("account_id")]
+        public int? AccountId { get; }
+        [JsonProperty("in_most_viral")]
         public bool MostViral { get; }
-        public string[] Tags { get; }
+        [JsonProperty("tags")]
+        public Tag[] Tags { get; }
+        [JsonProperty("is_ad")]
         public bool IsAd { get; }
-        public bool InGallery { get; }
+        [JsonProperty("in_gallery")]
+        public bool? InGallery { get; }
+        [JsonProperty("deletehash")]
         public string DeleteHash { get; }
+        [JsonProperty("name")]
         public string Name { get; }
+        [JsonProperty("link")]
         public string Link { get; }
 
-        public Image(string id, string title, string description, string dateTime, string type, bool animated, int height, int width, int views, int bandwidth, Vote? vote, bool favorite, bool nsfw, string section, string accountUrl, int accountId, bool mostViral, string[] tags, bool isAd, bool inGallery, string deleteHash, string name, string link) {
+        public Image(string id, string title, string description, int dateTime, string type, bool animated, int height, int width, int size, int views, string bandwidth, Vote? vote, bool favorite, bool nsfw, string section, string accountUrl, int? accountId, bool mostViral, Tag[] tags, bool isAd, bool? inGallery, string deleteHash, string name, string link) {
             Id = id;
             Title = title;
             Description = description;
@@ -42,11 +64,12 @@ namespace ImgurSharp.Entities {
             Animated = animated;
             Height = height;
             Width = width;
+            Size = size;
             Views = views;
             Bandwidth = bandwidth;
             Vote = vote;
             Favorite = favorite;
-            NSFW = nsfw;
+            Nsfw = nsfw;
             Section = section;
             AccountUrl = accountUrl;
             AccountId = accountId;
@@ -62,7 +85,9 @@ namespace ImgurSharp.Entities {
         public override string ToString() {
             string result = "";
             foreach(var prop in GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
-                result += $"{prop.Name}: {prop.GetValue(this)}\n";
+                string value = prop.GetValue(this) == null ? "" : prop.GetValue(this).ToString();
+
+                result += $"{prop.Name}: {value}\n";
             }
             return result;
         }
