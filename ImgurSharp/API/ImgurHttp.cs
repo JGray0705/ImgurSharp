@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using ImgurSharp.Models;
 using Newtonsoft.Json;
@@ -29,9 +30,22 @@ namespace ImgurSharp.API {
             ClientId = clientId;
             // Add the ClientId to the header. This will be used for every request
             DefaultRequestHeaders.Add("Authorization", $"Client-Id {ClientId}");
+            DefaultRequestHeaders.Clear();
+            DefaultRequestHeaders.Add("Authorization", $"Bearer {AccessToken}");
+
             // BaseAddress is used with every request and each method will add the proper endpoints
             BaseAddress = new Uri("https://api.imgur.com/3/");
-        }        
+        }
+        
+        public ImgurHttp(string clientId, string accessToken) {
+            ClientId = clientId;
+            AccessToken = accessToken;
+            // Add the ClientId to the header. This will be used for every request
+            DefaultRequestHeaders.Add("Authorization", "Bearer b9e30a65c731acf8a6d255032f685f313f4f4185");
+
+            // BaseAddress is used with every request and each method will add the proper endpoints
+            BaseAddress = new Uri("https://api.imgur.com/3/");
+        }
 
         /// <summary>
         /// Call the Imgur API using the URL param.
@@ -51,7 +65,7 @@ namespace ImgurSharp.API {
             return obj;
         }
 
-        public async Task<Comment[]> RequestReplies(string url) {
+        public async Task<List<Comment>> RequestReplies(string url) {
             HttpResponseMessage response = await GetAsync(url);
             response.EnsureSuccessStatusCode();
             List<Comment> replies = new List<Comment>();
@@ -61,7 +75,19 @@ namespace ImgurSharp.API {
                 var reply = child.ToObject<Comment>();
                 replies.Add(reply);
             }
-            return replies.ToArray();
+            return replies;
+        }
+
+        public async Task<bool> PostComment(string url, int parentId, string text) {
+            var data = new FormUrlEncodedContent(new KeyValuePair<string, string>[] {
+                new KeyValuePair<string, string>("image_id", "IM3NHJZ"),
+                new KeyValuePair<string, string>("parent_id", parentId.ToString()),
+                new KeyValuePair<string, string>("comment", text)
+            });
+
+            var response = await PostAsync(url, data);
+            response.EnsureSuccessStatusCode();
+            return response.IsSuccessStatusCode;
         }
     }
 }

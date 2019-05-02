@@ -1,6 +1,7 @@
 ﻿using ImgurSharp.API.Endpoints;
 using ImgurSharp.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ImgurSharp.API {
@@ -12,11 +13,13 @@ namespace ImgurSharp.API {
             ClientId = clientId;
             imgurHttp = new ImgurHttp(ClientId);
         }
+        public ImgurClient(string clientId, string accessToken) {
+            ClientId = clientId;
+            imgurHttp = new ImgurHttp(ClientId, accessToken);
+        }
 
         public async Task<Gallery> GetGallery(string galleryId) {
-            string url = $"gallery/{galleryId}";
-            Gallery gallery = await imgurHttp.MakeRequest<Gallery>(url);
-
+            Gallery gallery = await GalleryEndpoint.GetGallery(galleryId, imgurHttp);
             return gallery;
         }
 
@@ -35,9 +38,23 @@ namespace ImgurSharp.API {
             return comment;
         }
 
-        public async Task<Comment[]> GetCommentWithReplies(int commentId) {
-            Comment[] comments = await CommentEndpoint.GetCommentWithReplies(commentId, imgurHttp);
+        public async Task<List<Comment>> GetCommentWithReplies(int commentId) {
+            List<Comment> comments = await CommentEndpoint.GetCommentWithReplies(commentId, imgurHttp);
             return comments;
+        }
+
+        public async Task<Account> GetAccount(string username) {
+            Account account = await AccountEndpoint.GetAccount(username, imgurHttp);
+            return account;
+        }
+
+        public async Task<List<Comment>> GetAccountComments(string username, int limit) {
+            return await CommentEndpoint.GetAccountComments(username, limit, imgurHttp);
+        }
+
+        public async Task<bool> PostCommentReply(int parentID, string text) {
+            bool success = await CommentEndpoint.PostCommentReply(parentID, text, imgurHttp);
+            return success;
         }
 
         public void Dispose() {

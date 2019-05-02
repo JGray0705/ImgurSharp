@@ -81,9 +81,9 @@ namespace ImgurSharp.Models{
         ///All of the replies for this comment. If there are no replies to the comment then this is an empty set.
         ///</summary>
         [JsonIgnore]
-        public Comment[] Children;
+        public List<Comment> Children;
 
-        public Comment(int id, string imageId, string content, string author, int authorID, bool onAlbum, string albumCover, int ups, int downs, int points, int timestamp, int parentID, bool isDeleted, Vote? vote, Comment[] children) {
+        public Comment(int id, string imageId, string content, string author, int authorID, bool onAlbum, string albumCover, int ups, int downs, int points, int timestamp, int parentID, bool isDeleted, Vote? vote, List<Comment> children) {
             Id = id;
             ImageId = imageId;
             Content = content;

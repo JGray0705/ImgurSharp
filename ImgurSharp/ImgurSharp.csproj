@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Endpoints\AccountEndpoint.cs" />
     <Compile Include="API\Endpoints\CommentEndpoint.cs" />
+    <Compile Include="API\Endpoints\GalleryEndpoint.cs" />
     <Compile Include="API\Endpoints\ImageEndpoint.cs" />
     <Compile Include="API\ImgurClient.cs" />
     <Compile Include="API\ImgurHttp.cs" />

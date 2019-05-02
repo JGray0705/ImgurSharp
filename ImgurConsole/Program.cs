@@ -5,7 +5,7 @@ using ImgurSharp.API;
 namespace ImgurConsole {
     class Program {
         static async Task Main(string[] args) {
-            using(ImgurClient client = new ImgurClient("9a03df3d974f8c9")) {
+            using(ImgurClient client = new ImgurClient("9a03df3d974f8c9", "b9e30a65c731acf8a6d255032f685f313f4f4185")) {
 
                 var gallery = client.GetGallery("Rhz76nz");
                 Console.WriteLine(gallery.ToString());
@@ -20,6 +20,17 @@ namespace ImgurConsole {
                 foreach (var reply in replies) {
                     Console.WriteLine(reply.ToString());
                 }
+
+                var account = await client.GetAccount("cleverheather");
+                Console.WriteLine(account.ToString());
+
+                var comments = await client.GetAccountComments("cleverheather", 5);
+                foreach(var c in comments) {
+                    Console.WriteLine(c.ToString());
+                }
+
+                //var commentMade = await client.PostCommentReply(1588937269, "Hello, it's me.");
+                //Console.WriteLine(commentMade);
                 Console.ReadLine();
             }
         }
