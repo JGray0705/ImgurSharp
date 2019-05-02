@@ -78,13 +78,21 @@ namespace ImgurSharp.API {
             return replies;
         }
 
-        public async Task<bool> PostComment(string url, int parentId, string text) {
-            var data = new FormUrlEncodedContent(new KeyValuePair<string, string>[] {
-                new KeyValuePair<string, string>("image_id", "IM3NHJZ"),
-                new KeyValuePair<string, string>("parent_id", parentId.ToString()),
-                new KeyValuePair<string, string>("comment", text)
-            });
-
+        public async Task<bool> PostComment(string url, string text, int parentId = 0) {
+            FormUrlEncodedContent data;
+            if (parentId != 0) { 
+                data = new FormUrlEncodedContent(new KeyValuePair<string, string>[] {
+                    new KeyValuePair<string, string>("image_id", "IM3NHJZ"),
+                    new KeyValuePair<string, string>("parent_id", parentId.ToString()),
+                    new KeyValuePair<string, string>("comment", text)
+                });
+            }
+            else {
+                data = new FormUrlEncodedContent(new KeyValuePair<string, string>[] {
+                    new KeyValuePair<string, string>("image_id", "IM3NHJZ"),
+                    new KeyValuePair<string, string>("comment", text)
+                });
+            }
             var response = await PostAsync(url, data);
             response.EnsureSuccessStatusCode();
             return response.IsSuccessStatusCode;
