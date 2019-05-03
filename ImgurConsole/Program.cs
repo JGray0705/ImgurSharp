@@ -5,7 +5,7 @@ using ImgurSharp.API;
 namespace ImgurConsole {
     class Program {
         static async Task Main(string[] args) {
-            using(ImgurClient client = new ImgurClient("", "")) {
+            using(ImgurClient client = new ImgurClient(ApiKeys.ImgurClientId, ApiKeys.ImgurAccessToken)) {
 
                 var gallery = client.GetGallery("Rhz76nz");
                 Console.WriteLine(gallery.ToString());

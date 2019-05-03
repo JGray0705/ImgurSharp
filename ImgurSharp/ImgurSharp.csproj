@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\ApiKeys.cs" />
     <Compile Include="API\Endpoints\AccountEndpoint.cs" />
     <Compile Include="API\Endpoints\CommentEndpoint.cs" />
     <Compile Include="API\Endpoints\GalleryEndpoint.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Models\Gallery.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="Enums\Vote.cs" />
+    <Compile Include="Models\RateLimit.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

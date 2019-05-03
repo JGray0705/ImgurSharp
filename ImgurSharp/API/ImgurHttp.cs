@@ -28,11 +28,6 @@ namespace ImgurSharp.API {
 
         public ImgurHttp(string clientId) {
             ClientId = clientId;
-            // Add the ClientId to the header. This will be used for every request
-            DefaultRequestHeaders.Add("Authorization", $"Client-Id {ClientId}");
-            DefaultRequestHeaders.Clear();
-            DefaultRequestHeaders.Add("Authorization", $"Bearer {AccessToken}");
-
             // BaseAddress is used with every request and each method will add the proper endpoints
             BaseAddress = new Uri("https://api.imgur.com/3/");
         }
@@ -40,8 +35,6 @@ namespace ImgurSharp.API {
         public ImgurHttp(string clientId, string accessToken) {
             ClientId = clientId;
             AccessToken = accessToken;
-            // Add the ClientId to the header. This will be used for every request
-            DefaultRequestHeaders.Add("Authorization", "Bearer b9e30a65c731acf8a6d255032f685f313f4f4185");
 
             // BaseAddress is used with every request and each method will add the proper endpoints
             BaseAddress = new Uri("https://api.imgur.com/3/");
@@ -57,6 +50,7 @@ namespace ImgurSharp.API {
         public async Task<T> MakeRequest<T>(string url) {
             // response will be a Json response from the Imgur API
             HttpResponseMessage response = await GetAsync(url);
+            response.Headers.Add("Authorization", $"Client-Id {ClientId}");
             response.EnsureSuccessStatusCode();
 
             // Get the result string and convert to Json
@@ -67,6 +61,7 @@ namespace ImgurSharp.API {
 
         public async Task<List<Comment>> RequestReplies(string url) {
             HttpResponseMessage response = await GetAsync(url);
+            response.Headers.Add("Authorization", $"Client-Id {ClientId}");
             response.EnsureSuccessStatusCode();
             List<Comment> replies = new List<Comment>();
             
@@ -78,11 +73,11 @@ namespace ImgurSharp.API {
             return replies;
         }
 
-        public async Task<bool> PostComment(string url, string text, int parentId = 0) {
+        public async Task<bool> PostComment(string url, string text, string imageId, int parentId = 0) {
             FormUrlEncodedContent data;
             if (parentId != 0) { 
                 data = new FormUrlEncodedContent(new KeyValuePair<string, string>[] {
-                    new KeyValuePair<string, string>("image_id", "IM3NHJZ"),
+                    new KeyValuePair<string, string>("image_id", imageId),
                     new KeyValuePair<string, string>("parent_id", parentId.ToString()),
                     new KeyValuePair<string, string>("comment", text)
                 });
@@ -94,8 +89,17 @@ namespace ImgurSharp.API {
                 });
             }
             var response = await PostAsync(url, data);
+            response.Headers.Add("Authorization", $"Bearer {AccessToken}");
             response.EnsureSuccessStatusCode();
             return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> CheckRateLimit() {
+            var response = await GetAsync("credits");
+            response.Headers.Add("Authorization", $"Client-Id {ClientId}");
+            var result = JObject.Parse(await response.Content.ReadAsStringAsync());
+            var limits = result.ToObject<RateLimit>();
+            return limits.ClientRemaining > 120 && limits.ClientRemaining > 0; 
         }
     }
 }

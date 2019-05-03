@@ -26,9 +26,9 @@ namespace ImgurSharp.API.Endpoints {
             return comments;
         }
 
-        public static async Task<bool> PostCommentReply(int parentCommentId, string text, ImgurHttp imgurHttp) {
+        public static async Task<bool> PostCommentReply(int parentCommentId, string imageId, string text, ImgurHttp imgurHttp) {
             string url = $"comment";
-            return await imgurHttp.PostComment(url, text, parentCommentId);
+            return await imgurHttp.PostComment(url, text, imageId, parentCommentId);
         }
     }
 }

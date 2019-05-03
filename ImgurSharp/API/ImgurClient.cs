@@ -13,6 +13,7 @@ namespace ImgurSharp.API {
             ClientId = clientId;
             imgurHttp = new ImgurHttp(ClientId);
         }
+
         public ImgurClient(string clientId, string accessToken) {
             ClientId = clientId;
             imgurHttp = new ImgurHttp(ClientId, accessToken);
@@ -52,9 +53,13 @@ namespace ImgurSharp.API {
             return await CommentEndpoint.GetAccountComments(username, limit, imgurHttp);
         }
 
-        public async Task<bool> PostCommentReply(int parentID, string text) {
-            bool success = await CommentEndpoint.PostCommentReply(parentID, text, imgurHttp);
+        public async Task<bool> PostCommentReply(int parentID, string imageId, string text) {
+            bool success = await CommentEndpoint.PostCommentReply(parentID, imageId, text, imgurHttp);
             return success;
+        }
+
+        public async Task<bool> CheckRateLimit() {
+            return await imgurHttp.CheckRateLimit();
         }
 
         public void Dispose() {
