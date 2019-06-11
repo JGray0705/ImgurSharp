@@ -72,12 +72,12 @@ namespace ImgurSharp.Models {
         /// Indicates if the current user favorited the image. Defaults to false if not signed in.
         /// </summary>
         [JsonProperty("favorite")]
-        public bool Favorite { get; }
+        public bool? Favorite { get; }
         /// <summary>
         /// Indicates if the image has been marked as nsfw or not. Defaults to null if information is not available.
         /// </summary>
         [JsonProperty("nsfw")]
-        public bool Nsfw { get; }
+        public bool? Nsfw { get; }
         /// <summary>
         /// If the image has been categorized by our backend then this will contain the section the image belongs in. (funny, cats, adviceanimals, wtf, etc)
         /// </summary>
@@ -107,9 +107,9 @@ namespace ImgurSharp.Models {
         /// True if the image has been submitted to the gallery, false if otherwise.
         /// </summary>
         [JsonProperty("in_gallery")]
-        public bool InGallery { get; }
+        public bool? InGallery { get; }
 
-        public Album(string id, string title, string description, int datetime, string cover, int coverWidth, int coverHeight, string accountUrl, string accountId, string privacy, string layout, int views, string link, bool favorite, bool nsfw, string section, int order, string deleteHash, int imagesCount, Image[] images, bool inGallery) {
+        public Album(string id, string title, string description, int datetime, string cover, int coverWidth, int coverHeight, string accountUrl, string accountId, string privacy, string layout, int views, string link, bool? favorite, bool? nsfw, string section, int order, string deleteHash, int imagesCount, Image[] images, bool? inGallery) {
             Id = id;
             Title = title;
             Description = description;

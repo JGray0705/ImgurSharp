@@ -1,36 +1,34 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ImgurSharp.API;
+using LiteDB;
 
 namespace ImgurConsole {
     class Program {
         static async Task Main(string[] args) {
-            using(ImgurClient client = new ImgurClient(ApiKeys.ImgurClientId, ApiKeys.ImgurAccessToken)) {
-
-                var gallery = client.GetGallery("Rhz76nz");
-                Console.WriteLine(gallery.ToString());
-
-                var img = await client.GetImage("4imzFm2");
-                Console.WriteLine(img.ToString());
-
-                var comment = await client.GetComment(1639400349);
-                Console.WriteLine(comment.ToString());
-                
-                var replies = await client.GetCommentWithReplies(1639400349);
-                foreach (var reply in replies) {
-                    Console.WriteLine(reply.ToString());
+            using (ImgurClient client = new ImgurClient(ApiKeys.ImgurClientIdNoAuth, ApiKeys.ImgurAccessTokenCommentBot)) {
+                //var image1 = await client.GetImage("Yb3Xv1r");
+                //Console.WriteLine(image1.Id);
+                var album = await client.CreateAlbumAsync();
+                string albumHash = album.DeleteHash;
+                using (var db = new LiteDatabase("C:\\Users\\Git\\DiscordBot\\JeffBot\\JeffBot\\bin\\Debug\\netcoreapp2.1\\hugs.db")) {
+                    var table = db.GetCollection<HugData>("hugs");
+                    var hugs = table.FindAll();
+                    Console.WriteLine(album.Id);
+                    foreach (var hug in hugs) {
+                        Console.WriteLine(hug.Text);
+                        try {
+                            var image = await client.PostImageAnonymouslyAsync(hug.Text, albumHash);
+                            hug.Text = $"https://imgur.com/{image.Id}";
+                            table.Update(hug);
+                            Console.WriteLine(hug.Text);
+                        }
+                        catch {
+                            Console.WriteLine("NOPE");
+                        }
+                        await Task.Delay(5000);
+                    }
                 }
-
-                var account = await client.GetAccount("cleverheather");
-                Console.WriteLine(account.ToString());
-
-                var comments = await client.GetAccountComments("cleverheather", 5);
-                foreach(var c in comments) {
-                    Console.WriteLine(c.ToString());
-                }
-
-                //var commentMade = await client.PostCommentReply(1588937269, "Hello, it's me.");
-                //Console.WriteLine(commentMade);
                 Console.ReadLine();
             }
         }

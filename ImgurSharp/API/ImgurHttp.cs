@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using ImgurSharp.Models;
-using Newtonsoft.Json;
+﻿using ImgurSharp.Models;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace ImgurSharp.API {
     /// <summary>
@@ -30,6 +26,7 @@ namespace ImgurSharp.API {
             ClientId = clientId;
             // BaseAddress is used with every request and each method will add the proper endpoints
             BaseAddress = new Uri("https://api.imgur.com/3/");
+            DefaultRequestHeaders.Add("Authorization", $"Client-Id {ClientId}");
         }
         
         public ImgurHttp(string clientId, string accessToken) {
@@ -38,6 +35,7 @@ namespace ImgurSharp.API {
 
             // BaseAddress is used with every request and each method will add the proper endpoints
             BaseAddress = new Uri("https://api.imgur.com/3/");
+            DefaultRequestHeaders.Add("Authorization", $"Client-Id {ClientId}");
         }
 
         /// <summary>
@@ -50,18 +48,18 @@ namespace ImgurSharp.API {
         public async Task<T> MakeRequest<T>(string url) {
             // response will be a Json response from the Imgur API
             HttpResponseMessage response = await GetAsync(url);
-            response.Headers.Add("Authorization", $"Client-Id {ClientId}");
+            //response.Headers.Add("Authorization", $"Client-Id {ClientId}");
             response.EnsureSuccessStatusCode();
 
+            string json = await response.Content.ReadAsStringAsync();
             // Get the result string and convert to Json
-            JObject result = JObject.Parse(await response.Content.ReadAsStringAsync());
+            JObject result = JObject.Parse(json);
             var obj = result["data"].ToObject<T>();
             return obj;
         }
 
         public async Task<List<Comment>> RequestReplies(string url) {
             HttpResponseMessage response = await GetAsync(url);
-            response.Headers.Add("Authorization", $"Client-Id {ClientId}");
             response.EnsureSuccessStatusCode();
             List<Comment> replies = new List<Comment>();
             
@@ -94,12 +92,41 @@ namespace ImgurSharp.API {
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<Image> PostImageAnonymouslyAsync(string url, string imageUrl, string albumHash) {
+            FormUrlEncodedContent data;
+            data = new FormUrlEncodedContent(new KeyValuePair<string, string>[] {
+                new KeyValuePair<string, string>("type", "url"),
+                new KeyValuePair<string, string>("image", imageUrl),
+                new KeyValuePair<string, string>("album", albumHash)
+            });
+            var response = await PostAsync(url, data);
+            
+            response.EnsureSuccessStatusCode();
+            JObject result = JObject.Parse(await response.Content.ReadAsStringAsync());
+            var obj = result["data"].ToObject<Image>();
+            return obj;
+        }
+
         public async Task<bool> CheckRateLimit() {
             var response = await GetAsync("credits");
-            response.Headers.Add("Authorization", $"Client-Id {ClientId}");
             var result = JObject.Parse(await response.Content.ReadAsStringAsync());
             var limits = result.ToObject<RateLimit>();
             return limits.ClientRemaining > 120 && limits.ClientRemaining > 0; 
+        }
+
+        public async Task<Album> CreateAlbumAsync(string url) {
+            FormUrlEncodedContent data;
+            data = new FormUrlEncodedContent(new KeyValuePair<string, string>[] {
+                new KeyValuePair<string, string>("privacy", "hidden")
+            });
+            var request = new HttpRequestMessage(HttpMethod.Post, url) {
+                Content = data
+            };
+            var response = await SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            JObject result = JObject.Parse(await response.Content.ReadAsStringAsync());
+            var obj = result["data"].ToObject<Album>();
+            return obj;
         }
     }
 }

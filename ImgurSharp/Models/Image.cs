@@ -17,7 +17,7 @@ namespace ImgurSharp.Models {
         [JsonProperty("type")]
         public string Type { get; }
         [JsonProperty("animated")]
-        public bool Animated { get; }
+        public bool? Animated { get; }
         [JsonProperty("height")]
         public int Height { get; }
         [JsonProperty("width")]
@@ -31,9 +31,9 @@ namespace ImgurSharp.Models {
         [JsonProperty("vote")]
         public Vote? Vote { get; }
         [JsonProperty("favorite")]
-        public bool Favorite { get; }
+        public bool? Favorite { get; }
         [JsonProperty("nsfw")]
-        public bool Nsfw { get; }
+        public bool? Nsfw { get; }
         [JsonProperty("section")]
         public string Section { get; }
         [JsonProperty("account_url")]
@@ -41,7 +41,7 @@ namespace ImgurSharp.Models {
         [JsonProperty("account_id")]
         public int? AccountId { get; }
         [JsonProperty("in_most_viral")]
-        public bool MostViral { get; }
+        public bool? MostViral { get; }
         [JsonProperty("tags")]
         public Tag[] Tags { get; }
         [JsonProperty("is_ad")]
@@ -55,7 +55,7 @@ namespace ImgurSharp.Models {
         [JsonProperty("link")]
         public string Link { get; }
 
-        public Image(string id, string title, string description, int dateTime, string type, bool animated, int height, int width, int size, int views, string bandwidth, Vote? vote, bool favorite, bool nsfw, string section, string accountUrl, int? accountId, bool mostViral, Tag[] tags, bool isAd, bool? inGallery, string deleteHash, string name, string link) {
+        public Image(string id, string title, string description, int dateTime, string type, bool animated, int height, int width, int size, int views, string bandwidth, Vote? vote, bool? favorite, bool? nsfw, string section, string accountUrl, int? accountId, bool? mostViral, Tag[] tags, bool isAd, bool? inGallery, string deleteHash, string name, string link) {
             Id = id;
             Title = title;
             Description = description;

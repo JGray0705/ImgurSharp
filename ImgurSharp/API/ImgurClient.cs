@@ -24,6 +24,11 @@ namespace ImgurSharp.API {
             return gallery;
         }
 
+        public async Task<Album> CreateAlbumAsync() {
+            Album album = await GalleryEndpoint.CreateAlbumAsync(imgurHttp);
+            return album;
+        }
+
         /// <summary>
         /// Get an Image with the given ID
         /// </summary>
@@ -49,8 +54,8 @@ namespace ImgurSharp.API {
             return account;
         }
 
-        public async Task<List<Comment>> GetAccountComments(string username, int limit) {
-            return await CommentEndpoint.GetAccountComments(username, limit, imgurHttp);
+        public async Task<List<Comment>> GetAccountComments(string username, int limit, string sort = "newest") {
+            return await CommentEndpoint.GetAccountComments(username, limit, sort, imgurHttp);
         }
 
         public async Task<bool> PostCommentReply(int parentID, string imageId, string text) {
@@ -58,8 +63,27 @@ namespace ImgurSharp.API {
             return success;
         }
 
+        public async Task<Image> PostImageAnonymouslyAsync(string imageUrl, string albumHash) {
+            return await ImageEndpoint.PostImageAnonymouslyAsync(imageUrl, albumHash, imgurHttp);
+        }
         public async Task<bool> CheckRateLimit() {
             return await imgurHttp.CheckRateLimit();
+        }
+
+        public async Task<int> GetAccountCommentCount(string username) {
+            return await CommentEndpoint.GetAccountCommentCount(username, imgurHttp);
+        }
+
+        public async Task<List<string>> GetAccountAlbumIds(string username, int page = 0) {
+            return await GalleryEndpoint.GetAccountAlbumIds(username, page, imgurHttp);
+        } 
+
+        public async Task<int> GetTotalAlbumsAsync(string username) {
+            return await AccountEndpoint.GetTotaAlbumsAsync(username, imgurHttp);
+        }
+
+        public async Task<int> GetTotalImagesAsync(string username) {
+            return await AccountEndpoint.GetTotalImagesAsync(username, imgurHttp);
         }
 
         public void Dispose() {
