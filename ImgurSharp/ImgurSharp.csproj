@@ -53,6 +53,9 @@
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\Basic.cs" />
+    <Compile Include="Models\GalleryAlbum.cs" />
+    <Compile Include="Models\GalleryImage.cs" />
+    <Compile Include="Models\GalleryObject.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Gallery.cs" />
     <Compile Include="Models\GalleryProfile.cs" />

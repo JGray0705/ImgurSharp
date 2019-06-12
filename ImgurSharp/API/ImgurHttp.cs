@@ -52,6 +52,7 @@ namespace ImgurSharp.API {
             response.EnsureSuccessStatusCode();
 
             string json = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(json);
             // Get the result string and convert to Json
             JObject result = JObject.Parse(json);
             var obj = result["data"].ToObject<T>();

@@ -78,8 +78,8 @@ namespace ImgurSharp.API {
             return await GalleryEndpoint.GetAccountAlbumIds(username, page, imgurHttp);
         } 
 
-        public async Task<int> GetTotalAlbumsAsync(string username) {
-            return await AccountEndpoint.GetTotaAlbumsAsync(username, imgurHttp);
+        public async Task<GalleryObject[]> GetRecentSubmissionsAsync(string username) {
+            return await AccountEndpoint.GetAccountSubmissions(username, imgurHttp);
         }
 
         public async Task<int> GetTotalImagesAsync(string username) {

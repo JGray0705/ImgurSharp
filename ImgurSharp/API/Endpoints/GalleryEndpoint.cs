@@ -20,6 +20,6 @@ namespace ImgurSharp.API.Endpoints {
         public static async Task<List<string>> GetAccountAlbumIds(string username, int page, ImgurHttp imgurHttp) {
             string url = $"account/{username}/albums/ids/{page}/newest";
             return await imgurHttp.MakeRequest<List<string>>(url);
-        } 
+        }
     }
 }
